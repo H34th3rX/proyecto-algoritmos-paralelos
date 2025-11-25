@@ -1,6 +1,6 @@
 import tkinter
 import psutil
-import matplotlib
+import matplotlib # type: ignore
 import threading
 
 print("✅ Todas las librerías instaladas correctamente!")
