@@ -31,35 +31,54 @@ class CarreraAlgoritmos:
         self.memoria_final = 0
         self.en_ejecucion = False
     
-    def preparar_carrera(self, incluir_busqueda=False, objetivo_busqueda=None):
+    def preparar_carrera(self, incluir_busqueda=False, objetivo_busqueda=None, solo_busqueda=False):
         """
         Prepara todos los algoritmos para la carrera
         
         Args:
             incluir_busqueda: Si True, incluye algoritmos de búsqueda
             objetivo_busqueda: Número a buscar en el arreglo
+            solo_busqueda: Si True, solo ejecuta algoritmos de búsqueda
         """
-        # Algoritmos de ordenamiento
-        algoritmos = [
-            ("Burbuja", AlgoritmoOrdenamiento.burbuja),
-            ("QuickSort", AlgoritmoOrdenamiento.quicksort),
-            ("Inserción", AlgoritmoOrdenamiento.insercion),
-        ]
+        algoritmos = []
         
-        # Agregar algoritmos de búsqueda si se solicita
-        if incluir_busqueda and objetivo_busqueda is not None:
-            # Wrapper para búsqueda secuencial
-            def busqueda_sec_wrapper(arr):
-                return AlgoritmoBusqueda.busqueda_secuencial(arr, objetivo_busqueda)
+        # Si es solo búsqueda, solo agregar esos
+        if solo_busqueda:
+            if objetivo_busqueda is not None:
+                # Wrapper para búsqueda secuencial
+                def busqueda_sec_wrapper(arr):
+                    return AlgoritmoBusqueda.busqueda_secuencial(arr, objetivo_busqueda)
+                
+                # Wrapper para búsqueda binaria
+                def busqueda_bin_wrapper(arr):
+                    return AlgoritmoBusqueda.busqueda_binaria(arr, objetivo_busqueda)
+                
+                algoritmos = [
+                    ("Búsqueda Secuencial", busqueda_sec_wrapper),
+                    ("Búsqueda Binaria", busqueda_bin_wrapper),
+                ]
+        else:
+            # Algoritmos de ordenamiento
+            algoritmos = [
+                ("Burbuja", AlgoritmoOrdenamiento.burbuja),
+                ("QuickSort", AlgoritmoOrdenamiento.quicksort),
+                ("Inserción", AlgoritmoOrdenamiento.insercion),
+            ]
             
-            # Wrapper para búsqueda binaria
-            def busqueda_bin_wrapper(arr):
-                return AlgoritmoBusqueda.busqueda_binaria(arr, objetivo_busqueda)
-            
-            algoritmos.extend([
-                ("Búsqueda Secuencial", busqueda_sec_wrapper),
-                ("Búsqueda Binaria", busqueda_bin_wrapper),
-            ])
+            # Agregar algoritmos de búsqueda si se solicita
+            if incluir_busqueda and objetivo_busqueda is not None:
+                # Wrapper para búsqueda secuencial
+                def busqueda_sec_wrapper(arr):
+                    return AlgoritmoBusqueda.busqueda_secuencial(arr, objetivo_busqueda)
+                
+                # Wrapper para búsqueda binaria
+                def busqueda_bin_wrapper(arr):
+                    return AlgoritmoBusqueda.busqueda_binaria(arr, objetivo_busqueda)
+                
+                algoritmos.extend([
+                    ("Búsqueda Secuencial", busqueda_sec_wrapper),
+                    ("Búsqueda Binaria", busqueda_bin_wrapper),
+                ])
         
         # Crear ejecutores para cada algoritmo
         self.ejecutores = []

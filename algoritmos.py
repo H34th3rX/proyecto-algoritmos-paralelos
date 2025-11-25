@@ -171,19 +171,8 @@ class EjecutorAlgoritmo:
         """Método interno para ejecutar y medir tiempo"""
         inicio = time.perf_counter()
         
-        # Ejecutar el algoritmo con seguimiento de progreso
-        if "Burbuja" in self.nombre:
-            self.resultado = self._burbuja_con_progreso(self.arr)
-        elif "QuickSort" in self.nombre:
-            self.resultado = self._quicksort_con_progreso(self.arr)
-        elif "Inserción" in self.nombre:
-            self.resultado = self._insercion_con_progreso(self.arr)
-        elif "Búsqueda Secuencial" in self.nombre:
-            self.resultado = self._busqueda_secuencial_con_progreso(self.arr)
-        elif "Búsqueda Binaria" in self.nombre:
-            self.resultado = self._busqueda_binaria_con_progreso(self.arr)
-        else:
-            self.resultado = self.funcion(self.arr)
+        # Ejecutar el algoritmo SIN seguimiento de progreso para no afectar tiempos
+        self.resultado = self.funcion(self.arr)
         
         fin = time.perf_counter()
         self.tiempo = fin - inicio
@@ -195,10 +184,9 @@ class EjecutorAlgoritmo:
             self.callback(self.nombre, self.tiempo)
     
     def _reportar_progreso(self, progreso):
-        """Reporta el progreso actual"""
-        self.progreso_actual = progreso
-        if self.callback_progreso:
-            self.callback_progreso(self.nombre, progreso)
+        """Reporta el progreso actual (DESHABILITADO para no afectar tiempos)"""
+        # Ya no se usa - los tiempos deben ser puros
+        pass
     
     def _burbuja_con_progreso(self, arr):
         """Burbuja con reporte de progreso"""
@@ -206,9 +194,10 @@ class EjecutorAlgoritmo:
         n = len(arr_copy)
         
         for i in range(n):
-            # Reportar progreso
-            progreso = (i / n) * 100
-            self._reportar_progreso(progreso)
+            # Reportar progreso cada 5% para no saturar
+            if i % (n // 20) == 0:
+                progreso = (i / n) * 100
+                self._reportar_progreso(progreso)
             
             for j in range(0, n - i - 1):
                 if arr_copy[j] > arr_copy[j + 1]:
@@ -221,12 +210,16 @@ class EjecutorAlgoritmo:
         arr_copy = arr.copy()
         self.qs_total = len(arr_copy)
         self.qs_procesados = 0
+        self.qs_ultimo_reporte = 0
         
         def quicksort_recursivo(sub_arr):
             if len(sub_arr) <= 1:
                 self.qs_procesados += len(sub_arr)
-                progreso = (self.qs_procesados / self.qs_total) * 100
-                self._reportar_progreso(progreso)
+                # Solo reportar cada 5%
+                if self.qs_procesados - self.qs_ultimo_reporte > self.qs_total * 0.05:
+                    progreso = (self.qs_procesados / self.qs_total) * 100
+                    self._reportar_progreso(progreso)
+                    self.qs_ultimo_reporte = self.qs_procesados
                 return sub_arr
             
             pivote = sub_arr[-1]
@@ -235,8 +228,10 @@ class EjecutorAlgoritmo:
             mayores = [x for x in sub_arr[:-1] if x > pivote]
             
             self.qs_procesados += len(iguales)
-            progreso = (self.qs_procesados / self.qs_total) * 100
-            self._reportar_progreso(progreso)
+            if self.qs_procesados - self.qs_ultimo_reporte > self.qs_total * 0.05:
+                progreso = (self.qs_procesados / self.qs_total) * 100
+                self._reportar_progreso(progreso)
+                self.qs_ultimo_reporte = self.qs_procesados
             
             return quicksort_recursivo(menores) + iguales + quicksort_recursivo(mayores)
         
@@ -248,9 +243,10 @@ class EjecutorAlgoritmo:
         n = len(arr_copy)
         
         for i in range(1, n):
-            # Reportar progreso
-            progreso = (i / n) * 100
-            self._reportar_progreso(progreso)
+            # Reportar progreso cada 5%
+            if i % (n // 20) == 0:
+                progreso = (i / n) * 100
+                self._reportar_progreso(progreso)
             
             clave = arr_copy[i]
             j = i - 1
