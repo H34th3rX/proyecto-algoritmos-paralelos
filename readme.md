@@ -30,7 +30,7 @@ Implementar y comparar el rendimiento de diferentes algoritmos de búsqueda y or
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/TU-USUARIO/proyecto-algoritmos-paralelos.git
+git clone https://github.com/H34th3rX/proyecto-algoritmos-paralelos.git
 cd proyecto-algoritmos-paralelos
 ```
 
