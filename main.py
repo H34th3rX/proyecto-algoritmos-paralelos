@@ -1,8 +1,3 @@
-"""
-Aplicación Principal - Carrera de Algoritmos Paralelos
-Interfaz Gráfica Moderna con Tkinter
-"""
-
 import tkinter as tk
 from tkinter import ttk, messagebox, Canvas, Scrollbar
 import threading
@@ -11,7 +6,7 @@ import random
 from carrera import CarreraAlgoritmos
 from utils import generar_arreglo, formatear_tiempo, formatear_memoria
 
-# Colores modernos (Tema oscuro)
+# === CONFIGURACIÓN DE COLORES ===
 COLOR_BG = "#1a1a2e"
 COLOR_PANEL = "#16213e"
 COLOR_ACCENT = "#0f3460"
@@ -21,7 +16,7 @@ COLOR_WARNING = "#f39c12"
 COLOR_TEXT = "#eaeaea"
 COLOR_TEXT_DIM = "#94a1b2"
 
-# Colores para cada algoritmo
+# === COLORES POR ALGORITMO ===
 COLORES_ALGORITMOS = {
     "Burbuja": "#e74c3c",
     "QuickSort": "#3498db",
@@ -32,8 +27,6 @@ COLORES_ALGORITMOS = {
 
 
 class BarraProgreso(tk.Canvas):
-    """Barra de progreso personalizada y animada"""
-    
     def __init__(self, parent, nombre, color, **kwargs):
         super().__init__(parent, bg=COLOR_PANEL, highlightthickness=0, **kwargs)
         self.nombre = nombre
@@ -48,16 +41,13 @@ class BarraProgreso(tk.Canvas):
         self.dibujar()
     
     def dibujar(self):
-        """Dibuja la barra de progreso"""
         self.delete("all")
         
-        # Fondo de la barra
         self.create_rectangle(
             10, 20, self.width - 10, self.height - 10,
             fill=COLOR_ACCENT, outline=""
         )
         
-        # Barra de progreso
         if self.progreso > 0:
             ancho_progreso = (self.width - 20) * (self.progreso / 100)
             self.create_rectangle(
@@ -65,7 +55,6 @@ class BarraProgreso(tk.Canvas):
                 fill=self.color, outline=""
             )
         
-        # Texto del nombre
         self.create_text(
             20, 15,
             text=self.nombre,
@@ -74,7 +63,6 @@ class BarraProgreso(tk.Canvas):
             anchor="w"
         )
         
-        # Texto del tiempo
         if self.completado:
             tiempo_texto = f"✓ {formatear_tiempo(self.tiempo)}"
             color_texto = COLOR_SUCCESS
@@ -94,7 +82,6 @@ class BarraProgreso(tk.Canvas):
         )
     
     def actualizar(self, progreso=None, tiempo=None, completado=False):
-        """Actualiza la barra de progreso"""
         if progreso is not None:
             self.progreso = min(progreso, 100)
         if tiempo is not None:
@@ -103,7 +90,6 @@ class BarraProgreso(tk.Canvas):
         self.dibujar()
     
     def reset(self):
-        """Reinicia la barra"""
         self.progreso = 0
         self.tiempo = 0
         self.completado = False
@@ -111,38 +97,35 @@ class BarraProgreso(tk.Canvas):
 
 
 class AplicacionCarrera(tk.Tk):
-    """Aplicación principal"""
-    
     def __init__(self):
         super().__init__()
         
-        self.title("🏁 Carrera de Algoritmos Paralelos")
+        self.title("Carrera de Algoritmos Paralelos")
         self.geometry("1000x850")
         self.configure(bg=COLOR_BG)
         self.resizable(True, True)
         
-        # Variables
+        # === VARIABLES DE CONTROL ===
         self.arreglo = []
         self.carrera = None
         self.barras = {}
         self.tiempo_inicio = 0
         self.objetivo_busqueda = None
-        self.modo_actual = "ordenamiento"  # "ordenamiento" o "busqueda"
+        self.modo_actual = "ordenamiento"
         
+        # === INICIALIZACIÓN ===
         self.crear_interfaz()
         self.generar_nuevo_arreglo()
     
     def crear_interfaz(self):
-        """Crea toda la interfaz gráfica"""
-        
-        # ===== HEADER =====
+        # === INTERFAZ GRÁFICA ===
         header = tk.Frame(self, bg=COLOR_PANEL, height=100)
         header.pack(fill="x", padx=20, pady=(20, 10))
         header.pack_propagate(False)
         
         titulo = tk.Label(
             header,
-            text="🏁 CARRERA DE ALGORITMOS",
+            text="CARRERA DE ALGORITMOS",
             font=("Segoe UI", 24, "bold"),
             bg=COLOR_PANEL,
             fg=COLOR_PRIMARY
@@ -158,36 +141,34 @@ class AplicacionCarrera(tk.Tk):
         )
         subtitulo.pack()
         
-        # ===== PANEL DE INFO Y MUESTRA DE ARREGLO =====
+        # === PANEL DE INFORMACIÓN ===
         info_container = tk.Frame(self, bg=COLOR_BG)
         info_container.pack(fill="x", padx=20, pady=10)
         
-        # Info boxes a la izquierda
         info_frame = tk.Frame(info_container, bg=COLOR_BG)
         info_frame.pack(side="left", fill="x", expand=True)
         
         self.label_tamanio = self.crear_info_box(
-            info_frame, "📊 Tamaño del Arreglo", "10,000 elementos"
+            info_frame, "Tamaño del Arreglo", "10,000 elementos"
         )
         self.label_tamanio.pack(side="left", padx=10)
         
         self.label_estado = self.crear_info_box(
-            info_frame, "⚡ Estado", "Listo para iniciar"
+            info_frame, "Estado", "Listo para iniciar"
         )
         self.label_estado.pack(side="left", padx=10)
         
         self.label_memoria = self.crear_info_box(
-            info_frame, "💾 Memoria", "0 MB"
+            info_frame, "Memoria", "0 MB"
         )
         self.label_memoria.pack(side="left", padx=10)
         
-        # Muestra del arreglo a la derecha
         muestra_frame = tk.Frame(info_container, bg=COLOR_PANEL, width=250)
         muestra_frame.pack(side="right", padx=10, fill="y")
         
         tk.Label(
             muestra_frame,
-            text="📋 Muestra del Arreglo",
+            text="Muestra del Arreglo",
             font=("Segoe UI", 9, "bold"),
             bg=COLOR_PANEL,
             fg=COLOR_TEXT_DIM
@@ -204,7 +185,7 @@ class AplicacionCarrera(tk.Tk):
         )
         self.label_muestra.pack(pady=(0, 5), padx=10)
         
-        # ===== SELECTOR DE MODO =====
+        # === SELECTOR DE MODO ===
         modo_frame = tk.Frame(self, bg=COLOR_PANEL, height=70)
         modo_frame.pack(fill="x", padx=20, pady=10)
         modo_frame.pack_propagate(False)
@@ -222,7 +203,7 @@ class AplicacionCarrera(tk.Tk):
         
         self.btn_modo_orden = tk.Button(
             botones_modo,
-            text="🔢 ORDENAMIENTO",
+            text="ORDENAMIENTO",
             command=lambda: self.cambiar_modo("ordenamiento"),
             bg=COLOR_SUCCESS,
             fg="white",
@@ -236,7 +217,7 @@ class AplicacionCarrera(tk.Tk):
         
         self.btn_modo_busqueda = tk.Button(
             botones_modo,
-            text="🔍 BÚSQUEDA",
+            text="BÚSQUEDA",
             command=lambda: self.cambiar_modo("busqueda"),
             bg=COLOR_ACCENT,
             fg="white",
@@ -248,48 +229,46 @@ class AplicacionCarrera(tk.Tk):
         )
         self.btn_modo_busqueda.pack(side="left", padx=5)
         
-        # ===== PANEL DE CARRERAS =====
+        # === PANEL DE BARRAS DE PROGRESO ===
         carrera_frame = tk.Frame(self, bg=COLOR_PANEL, height=350)
         carrera_frame.pack(fill="both", expand=True, padx=20, pady=10)
         
         self.titulo_carrera = tk.Label(
             carrera_frame,
-            text="🏃 COMPETIDORES - ORDENAMIENTO",
+            text="COMPETIDORES - ORDENAMIENTO",
             font=("Segoe UI", 14, "bold"),
             bg=COLOR_PANEL,
             fg=COLOR_TEXT
         )
         self.titulo_carrera.pack(pady=10)
         
-        # Frame para las barras
         self.barras_container = tk.Frame(carrera_frame, bg=COLOR_PANEL)
         self.barras_container.pack(pady=5, fill="both", expand=True)
         
-        # Crear barras inicialmente
         self.actualizar_barras()
         
-        # ===== PANEL DE GANADOR =====
+        # === PANEL DE GANADOR ===
         self.ganador_frame = tk.Frame(self, bg=COLOR_ACCENT, height=70)
         self.ganador_frame.pack(fill="x", padx=20, pady=10)
         self.ganador_frame.pack_propagate(False)
         
         self.label_ganador = tk.Label(
             self.ganador_frame,
-            text="🏆 Esperando resultados...",
+            text="Esperando resultados...",
             font=("Segoe UI", 13, "bold"),
             bg=COLOR_ACCENT,
             fg=COLOR_TEXT
         )
         self.label_ganador.pack(expand=True)
         
-        # ===== BOTONES =====
+        # === BOTONES DE CONTROL ===
         botones_frame = tk.Frame(self, bg=COLOR_BG, height=60)
         botones_frame.pack(fill="x", pady=10)
         botones_frame.pack_propagate(False)
         
         self.btn_iniciar = self.crear_boton(
             botones_frame,
-            text="▶ INICIAR CARRERA",
+            text="INICIAR CARRERA",
             command=self.iniciar_carrera,
             bg=COLOR_SUCCESS,
             width=20
@@ -298,7 +277,7 @@ class AplicacionCarrera(tk.Tk):
         
         self.btn_nuevo = self.crear_boton(
             botones_frame,
-            text="🔄 NUEVO ARREGLO",
+            text="NUEVO ARREGLO",
             command=self.generar_nuevo_arreglo,
             bg=COLOR_WARNING,
             width=20
@@ -306,7 +285,6 @@ class AplicacionCarrera(tk.Tk):
         self.btn_nuevo.pack(side="left", padx=10)
     
     def crear_info_box(self, parent, titulo, valor):
-        """Crea un box de información"""
         frame = tk.Frame(parent, bg=COLOR_PANEL)
         
         lbl_titulo = tk.Label(
@@ -330,7 +308,6 @@ class AplicacionCarrera(tk.Tk):
         return lbl_valor
     
     def crear_boton(self, parent, text, command, bg, width=15):
-        """Crea un botón estilizado"""
         btn = tk.Button(
             parent,
             text=text,
@@ -346,40 +323,35 @@ class AplicacionCarrera(tk.Tk):
         return btn
     
     def cambiar_modo(self, modo):
-        """Cambia entre modo ordenamiento y búsqueda"""
+        # === CAMBIO ENTRE MODO ORDENAMIENTO Y BÚSQUEDA ===
         self.modo_actual = modo
         
         if modo == "ordenamiento":
             self.btn_modo_orden.config(bg=COLOR_SUCCESS)
             self.btn_modo_busqueda.config(bg=COLOR_ACCENT)
-            self.titulo_carrera.config(text="🏃 COMPETIDORES - ORDENAMIENTO")
+            self.titulo_carrera.config(text="COMPETIDORES - ORDENAMIENTO")
         else:
             self.btn_modo_orden.config(bg=COLOR_ACCENT)
             self.btn_modo_busqueda.config(bg=COLOR_SUCCESS)
-            # Mostrar el objetivo de búsqueda en el título
             if self.objetivo_busqueda is not None:
-                self.titulo_carrera.config(text=f"🏃 COMPETIDORES - BÚSQUEDA (Objetivo: {self.objetivo_busqueda})")
+                self.titulo_carrera.config(text=f"COMPETIDORES - BÚSQUEDA (Objetivo: {self.objetivo_busqueda})")
             elif self.arreglo:
-                # Si no hay objetivo, generar uno
                 self.objetivo_busqueda = random.choice(self.arreglo)
-                self.titulo_carrera.config(text=f"🏃 COMPETIDORES - BÚSQUEDA (Objetivo: {self.objetivo_busqueda})")
+                self.titulo_carrera.config(text=f"COMPETIDORES - BÚSQUEDA (Objetivo: {self.objetivo_busqueda})")
         
         self.actualizar_barras()
         
     def actualizar_barras(self):
-        """Actualiza las barras según el modo actual"""
-        # Limpiar barras existentes
+        # === ACTUALIZACIÓN DE BARRAS DE PROGRESO ===
         for widget in self.barras_container.winfo_children():
             widget.destroy()
         self.barras.clear()
         
-        # Determinar qué algoritmos mostrar
         if self.modo_actual == "ordenamiento":
             algoritmos_mostrar = ["Burbuja", "QuickSort", "Inserción"]
         else:
             algoritmos_mostrar = ["Búsqueda Secuencial", "Búsqueda Binaria"]
         
-        # Crear barras
         for nombre in algoritmos_mostrar:
             color = COLORES_ALGORITMOS[nombre]
             barra = BarraProgreso(
@@ -393,59 +365,50 @@ class AplicacionCarrera(tk.Tk):
             self.barras[nombre] = barra
     
     def actualizar_muestra_arreglo(self):
-        """Actualiza la muestra del arreglo en pantalla"""
+        # === ACTUALIZACIÓN DE MUESTRA DEL ARREGLO ===
         if self.arreglo:
-            # Mostrar primeros 15 elementos
             muestra = str(self.arreglo[:15])[1:-1]
             if len(self.arreglo) > 15:
                 muestra += ", ..."
             self.label_muestra.config(text=muestra)
     
     def generar_nuevo_arreglo(self):
-        """Genera un nuevo arreglo aleatorio"""
+        # === GENERACIÓN DE NUEVO ARREGLO ALEATORIO ===
         self.arreglo = generar_arreglo(10000)
-        # Seleccionar un número aleatorio del arreglo para buscar
         self.objetivo_busqueda = random.choice(self.arreglo)
         
         self.label_estado.config(text="Nuevo arreglo generado")
-        self.label_ganador.config(text="🏆 Esperando resultados...")
+        self.label_ganador.config(text="Esperando resultados...")
         
-        # Actualizar título si estamos en modo búsqueda
         if self.modo_actual == "busqueda":
-            self.titulo_carrera.config(text=f"🏃 COMPETIDORES - BÚSQUEDA (Objetivo: {self.objetivo_busqueda})")
+            self.titulo_carrera.config(text=f"COMPETIDORES - BÚSQUEDA (Objetivo: {self.objetivo_busqueda})")
         
-        # Actualizar muestra
         self.actualizar_muestra_arreglo()
         
-        # Resetear barras
         for barra in self.barras.values():
             barra.reset()
     
     def iniciar_carrera(self):
-        """Inicia la carrera de algoritmos"""
+        # === INICIO DE CARRERA DE ALGORITMOS PARALELOS ===
         if not self.arreglo:
             messagebox.showwarning("Advertencia", "Genera un arreglo primero")
             return
         
-        # Deshabilitar botones
         self.btn_iniciar.config(state="disabled")
         self.btn_modo_orden.config(state="disabled")
         self.btn_modo_busqueda.config(state="disabled")
         
         if self.modo_actual == "ordenamiento":
-            self.label_estado.config(text="⚡ ORDENANDO...")
+            self.label_estado.config(text="ORDENANDO...")
         else:
-            self.label_estado.config(text=f"⚡ BUSCANDO...")
-            # Actualizar el título con el objetivo
-            self.titulo_carrera.config(text=f"🏃 COMPETIDORES - BÚSQUEDA (Objetivo: {self.objetivo_busqueda})")
+            self.label_estado.config(text=f"BUSCANDO...")
+            self.titulo_carrera.config(text=f"COMPETIDORES - BÚSQUEDA (Objetivo: {self.objetivo_busqueda})")
         
-        self.label_ganador.config(text="🏁 Carrera en progreso...")
+        self.label_ganador.config(text="Carrera en progreso...")
         
-        # Resetear barras
         for barra in self.barras.values():
             barra.reset()
         
-        # Crear y iniciar carrera
         self.carrera = CarreraAlgoritmos(
             self.arreglo,
             callback_progreso=self.on_progreso,
@@ -464,27 +427,24 @@ class AplicacionCarrera(tk.Tk):
         
         self.tiempo_inicio = time.time()
         
-        # Iniciar animación visual (no afecta tiempos reales)
         self.animando = True
         threading.Thread(target=self.animar_barras, daemon=True).start()
         
-        # Iniciar carrera
         self.carrera.iniciar_carrera()
     
     def animar_barras(self):
-        """Animación visual de las barras (no afecta tiempos reales)"""
+        # === ANIMACIÓN DE BARRAS DE PROGRESO ===
         velocidades = {
-            "QuickSort": 0.8,        # Muy rápido
-            "Búsqueda Binaria": 0.9, # Muy rápido
-            "Búsqueda Secuencial": 0.5, # Rápido
-            "Inserción": 0.15,       # Medio
-            "Burbuja": 0.08,         # Lento
+            "QuickSort": 0.8,
+            "Búsqueda Binaria": 0.9,
+            "Búsqueda Secuencial": 0.5,
+            "Inserción": 0.15,
+            "Burbuja": 0.08,
         }
         
         while self.animando and self.carrera and self.carrera.en_ejecucion:
             for ejecutor in self.carrera.ejecutores:
                 if not ejecutor.completado and ejecutor.nombre in self.barras:
-                    # Calcular progreso visual basado en velocidad estimada
                     tiempo_transcurrido = time.time() - self.tiempo_inicio
                     velocidad = velocidades.get(ejecutor.nombre, 0.5)
                     progreso_visual = min(tiempo_transcurrido * velocidad * 10, 95)
@@ -500,46 +460,43 @@ class AplicacionCarrera(tk.Tk):
         self.animando = False
     
     def on_progreso_tiempo_real(self, nombre, progreso):
-        """Callback para actualizar progreso en tiempo real (ya no se usa)"""
-        pass  # Deshabilitado para no afectar tiempos
+        # === CALLBACK PARA PROGRESO EN TIEMPO REAL ===
+        pass
     
     def on_progreso(self, nombre, tiempo, completados):
-        """Callback cuando un algoritmo termina"""
+        # === CALLBACK CUANDO ALGORITMO TERMINA ===
         def update():
             self.barras[nombre].actualizar(progreso=100, tiempo=tiempo, completado=True)
         
         self.after(0, update)
     
     def on_completo(self, resultados, memoria_consumida):
-        """Callback cuando todos los algoritmos terminan"""
+        # === CALLBACK CUANDO TODOS LOS ALGORITMOS TERMINAN ===
         def update():
-            # Detener animación
             self.animando = False
             
-            # Habilitar botones
             self.btn_iniciar.config(state="normal")
             self.btn_modo_orden.config(state="normal")
             self.btn_modo_busqueda.config(state="normal")
             
-            self.label_estado.config(text="✅ Carrera completada")
+            self.label_estado.config(text="Carrera completada")
             self.label_memoria.config(text=formatear_memoria(memoria_consumida))
             
-            # Mostrar ganador
+            # === DETERMINACIÓN DEL GANADOR ===
             if resultados:
                 ganador, tiempo = resultados[0]
                 self.label_ganador.config(
-                    text=f"🏆 GANADOR: {ganador} - {formatear_tiempo(tiempo)}",
+                    text=f"GANADOR: {ganador} - {formatear_tiempo(tiempo)}",
                     fg=COLOR_SUCCESS
                 )
                 
-                # Mostrar clasificación completa
                 tipo = "ORDENAMIENTO" if self.modo_actual == "ordenamiento" else "BÚSQUEDA"
-                mensaje = f"📊 CLASIFICACIÓN FINAL - {tipo}:\n\n"
+                mensaje = f"CLASIFICACIÓN FINAL - {tipo}:\n\n"
                 for i, (nombre, tiempo) in enumerate(resultados, 1):
-                    medalla = ["🥇", "🥈", "🥉"][i-1] if i <= 3 else f"{i}."
+                    medalla = ["1.", "2.", "3."][i-1] if i <= 3 else f"{i}."
                     mensaje += f"{medalla} {nombre}: {formatear_tiempo(tiempo)}\n"
                 
-                mensaje += f"\n💾 Memoria consumida: {formatear_memoria(memoria_consumida)}"
+                mensaje += f"\nMemoria consumida: {formatear_memoria(memoria_consumida)}"
                 
                 messagebox.showinfo("Resultados Finales", mensaje)
         

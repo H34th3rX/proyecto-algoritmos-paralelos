@@ -1,12 +1,12 @@
-# 🏁 Carrera de Algoritmos Paralelos
+# Carrera de Algoritmos Paralelos
 
 Proyecto Final - Algoritmos Paralelos
 
-## 📋 Descripción
+## Descripción
 
 Aplicación de escritorio que simula una "carrera" entre diferentes algoritmos de ordenamiento, ejecutándolos todos en paralelo sobre el mismo arreglo de 10,000 elementos. La aplicación muestra en tiempo real el progreso de cada algoritmo y determina cuál es el más rápido.
 
-## 🎯 Objetivos
+## Objetivos
 
 ### Objetivo General
 Implementar y comparar el rendimiento de diferentes algoritmos de búsqueda y ordenamiento ejecutándose en paralelo.
@@ -18,7 +18,7 @@ Implementar y comparar el rendimiento de diferentes algoritmos de búsqueda y or
 - Medir consumo de memoria del proceso
 - Visualizar los resultados en una interfaz gráfica moderna
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 - **Python 3.11+**
 - **Tkinter** - Interfaz gráfica
@@ -26,7 +26,7 @@ Implementar y comparar el rendimiento de diferentes algoritmos de búsqueda y or
 - **Psutil** - Medición de memoria
 - **PyInstaller** - Generación de ejecutable
 
-## 📦 Instalación
+## Instalación
 
 ### 1. Clonar el repositorio
 ```bash
@@ -53,7 +53,7 @@ pyinstaller --onefile --windowed --name="CarreraAlgoritmos" main.py
 
 El ejecutable se generará en la carpeta `dist/`
 
-## 📊 Algoritmos Implementados
+## Algoritmos Implementados
 
 ### Algoritmos de Ordenamiento
 
@@ -77,7 +77,7 @@ El ejecutable se generará en la carpeta `dist/`
 2. **Búsqueda Binaria**
    - Complejidad: O(log n)
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 proyecto-algoritmos-paralelos/
@@ -90,15 +90,15 @@ proyecto-algoritmos-paralelos/
 └── README.md          # Este archivo
 ```
 
-## 🎨 Características de la Interfaz
+## Características de la Interfaz
 
-- ✨ Diseño moderno con tema oscuro
-- 📊 Barras de progreso animadas en tiempo real
-- 🏆 Visualización del algoritmo ganador
-- 💾 Medición de memoria consumida
-- 🎯 Resultados detallados con clasificación
+- Diseño moderno con tema oscuro
+- Barras de progreso animadas en tiempo real
+- Visualización del algoritmo ganador
+- Medición de memoria consumida
+- Resultados detallados con clasificación
 
-## 📈 Resultados
+## Resultados
 
 La aplicación muestra:
 - Tiempo de ejecución de cada algoritmo
@@ -106,10 +106,6 @@ La aplicación muestra:
 - Memoria RAM consumida durante el proceso
 - Algoritmo ganador destacado
 
-## 👥 Autor
+## Autor
 
-[Tu Nombre]
-
-## 📄 Licencia
-
-Este proyecto es parte de un proyecto académico.
+Heather Taveras 1-18-2711
