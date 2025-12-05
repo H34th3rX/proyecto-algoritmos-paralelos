@@ -24,11 +24,16 @@ class CarreraAlgoritmos:
         
         if solo_busqueda:
             if objetivo_busqueda is not None:
+                # === ARREGLO ORDENADO PARA BÚSQUEDA BINARIA ===
+                arr_ordenado = sorted(self.arreglo.copy())
+                
                 def busqueda_sec_wrapper(arr):
-                    return AlgoritmoBusqueda.busqueda_secuencial(arr, objetivo_busqueda)
+                    # Búsqueda secuencial en arreglo ordenado
+                    return AlgoritmoBusqueda.busqueda_secuencial(arr_ordenado, objetivo_busqueda)
                 
                 def busqueda_bin_wrapper(arr):
-                    return AlgoritmoBusqueda.busqueda_binaria(arr, objetivo_busqueda)
+                    # Búsqueda binaria en arreglo ordenado
+                    return AlgoritmoBusqueda.busqueda_binaria(arr_ordenado, objetivo_busqueda)
                 
                 algoritmos = [
                     ("Búsqueda Secuencial", busqueda_sec_wrapper),
@@ -42,11 +47,13 @@ class CarreraAlgoritmos:
             ]
             
             if incluir_busqueda and objetivo_busqueda is not None:
+                arr_ordenado = sorted(self.arreglo.copy())
+                
                 def busqueda_sec_wrapper(arr):
-                    return AlgoritmoBusqueda.busqueda_secuencial(arr, objetivo_busqueda)
+                    return AlgoritmoBusqueda.busqueda_secuencial(arr_ordenado, objetivo_busqueda)
                 
                 def busqueda_bin_wrapper(arr):
-                    return AlgoritmoBusqueda.busqueda_binaria(arr, objetivo_busqueda)
+                    return AlgoritmoBusqueda.busqueda_binaria(arr_ordenado, objetivo_busqueda)
                 
                 algoritmos.extend([
                     ("Búsqueda Secuencial", busqueda_sec_wrapper),

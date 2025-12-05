@@ -113,7 +113,6 @@ class AplicacionCarrera(tk.Tk):
         self.objetivo_busqueda = None
         self.modo_actual = "ordenamiento"
         
-        # === INICIALIZACIÓN ===
         self.crear_interfaz()
         self.generar_nuevo_arreglo()
     
@@ -141,7 +140,6 @@ class AplicacionCarrera(tk.Tk):
         )
         subtitulo.pack()
         
-        # === PANEL DE INFORMACIÓN ===
         info_container = tk.Frame(self, bg=COLOR_BG)
         info_container.pack(fill="x", padx=20, pady=10)
         
@@ -185,7 +183,6 @@ class AplicacionCarrera(tk.Tk):
         )
         self.label_muestra.pack(pady=(0, 5), padx=10)
         
-        # === SELECTOR DE MODO ===
         modo_frame = tk.Frame(self, bg=COLOR_PANEL, height=70)
         modo_frame.pack(fill="x", padx=20, pady=10)
         modo_frame.pack_propagate(False)
@@ -229,7 +226,6 @@ class AplicacionCarrera(tk.Tk):
         )
         self.btn_modo_busqueda.pack(side="left", padx=5)
         
-        # === PANEL DE BARRAS DE PROGRESO ===
         carrera_frame = tk.Frame(self, bg=COLOR_PANEL, height=350)
         carrera_frame.pack(fill="both", expand=True, padx=20, pady=10)
         
@@ -247,7 +243,6 @@ class AplicacionCarrera(tk.Tk):
         
         self.actualizar_barras()
         
-        # === PANEL DE GANADOR ===
         self.ganador_frame = tk.Frame(self, bg=COLOR_ACCENT, height=70)
         self.ganador_frame.pack(fill="x", padx=20, pady=10)
         self.ganador_frame.pack_propagate(False)
@@ -261,7 +256,6 @@ class AplicacionCarrera(tk.Tk):
         )
         self.label_ganador.pack(expand=True)
         
-        # === BOTONES DE CONTROL ===
         botones_frame = tk.Frame(self, bg=COLOR_BG, height=60)
         botones_frame.pack(fill="x", pady=10)
         botones_frame.pack_propagate(False)
@@ -323,7 +317,6 @@ class AplicacionCarrera(tk.Tk):
         return btn
     
     def cambiar_modo(self, modo):
-        # === CAMBIO ENTRE MODO ORDENAMIENTO Y BÚSQUEDA ===
         self.modo_actual = modo
         
         if modo == "ordenamiento":
@@ -342,7 +335,6 @@ class AplicacionCarrera(tk.Tk):
         self.actualizar_barras()
         
     def actualizar_barras(self):
-        # === ACTUALIZACIÓN DE BARRAS DE PROGRESO ===
         for widget in self.barras_container.winfo_children():
             widget.destroy()
         self.barras.clear()
@@ -365,7 +357,6 @@ class AplicacionCarrera(tk.Tk):
             self.barras[nombre] = barra
     
     def actualizar_muestra_arreglo(self):
-        # === ACTUALIZACIÓN DE MUESTRA DEL ARREGLO ===
         if self.arreglo:
             muestra = str(self.arreglo[:15])[1:-1]
             if len(self.arreglo) > 15:
@@ -373,7 +364,6 @@ class AplicacionCarrera(tk.Tk):
             self.label_muestra.config(text=muestra)
     
     def generar_nuevo_arreglo(self):
-        # === GENERACIÓN DE NUEVO ARREGLO ALEATORIO ===
         self.arreglo = generar_arreglo(10000)
         self.objetivo_busqueda = random.choice(self.arreglo)
         
@@ -389,7 +379,6 @@ class AplicacionCarrera(tk.Tk):
             barra.reset()
     
     def iniciar_carrera(self):
-        # === INICIO DE CARRERA DE ALGORITMOS PARALELOS ===
         if not self.arreglo:
             messagebox.showwarning("Advertencia", "Genera un arreglo primero")
             return
@@ -433,7 +422,6 @@ class AplicacionCarrera(tk.Tk):
         self.carrera.iniciar_carrera()
     
     def animar_barras(self):
-        # === ANIMACIÓN DE BARRAS DE PROGRESO ===
         velocidades = {
             "QuickSort": 0.8,
             "Búsqueda Binaria": 0.9,
@@ -460,18 +448,15 @@ class AplicacionCarrera(tk.Tk):
         self.animando = False
     
     def on_progreso_tiempo_real(self, nombre, progreso):
-        # === CALLBACK PARA PROGRESO EN TIEMPO REAL ===
         pass
     
     def on_progreso(self, nombre, tiempo, completados):
-        # === CALLBACK CUANDO ALGORITMO TERMINA ===
         def update():
             self.barras[nombre].actualizar(progreso=100, tiempo=tiempo, completado=True)
         
         self.after(0, update)
     
     def on_completo(self, resultados, memoria_consumida):
-        # === CALLBACK CUANDO TODOS LOS ALGORITMOS TERMINAN ===
         def update():
             self.animando = False
             
@@ -482,7 +467,6 @@ class AplicacionCarrera(tk.Tk):
             self.label_estado.config(text="Carrera completada")
             self.label_memoria.config(text=formatear_memoria(memoria_consumida))
             
-            # === DETERMINACIÓN DEL GANADOR ===
             if resultados:
                 ganador, tiempo = resultados[0]
                 self.label_ganador.config(

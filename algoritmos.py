@@ -6,7 +6,6 @@ class AlgoritmoBusqueda:
     
     @staticmethod
     def busqueda_secuencial(arr, objetivo):
-        # === BÚSQUEDA SECUENCIAL IMPLEMENTACIÓN ===
         for i in range(len(arr)):
             if arr[i] == objetivo:
                 return i
@@ -14,16 +13,14 @@ class AlgoritmoBusqueda:
     
     @staticmethod
     def busqueda_binaria(arr, objetivo):
-        # === BÚSQUEDA BINARIA IMPLEMENTACIÓN ===
-        arr_ordenado = sorted(arr)
         inicio = 0
-        fin = len(arr_ordenado) - 1
+        fin = len(arr) - 1
         
         while inicio <= fin:
             medio = (inicio + fin) // 2
-            if arr_ordenado[medio] == objetivo:
+            if arr[medio] == objetivo:
                 return medio
-            elif arr_ordenado[medio] < objetivo:
+            elif arr[medio] < objetivo:
                 inicio = medio + 1
             else:
                 fin = medio - 1
@@ -35,7 +32,6 @@ class AlgoritmoOrdenamiento:
     
     @staticmethod
     def burbuja(arr):
-        # === BUBBLE SORT IMPLEMENTACIÓN ===
         arr_copy = arr.copy()
         n = len(arr_copy)
         
@@ -48,7 +44,6 @@ class AlgoritmoOrdenamiento:
     
     @staticmethod
     def quicksort(arr):
-        # === QUICKSORT IMPLEMENTACIÓN ===
         arr_copy = arr.copy()
         
         if len(arr_copy) <= 1:
@@ -63,7 +58,6 @@ class AlgoritmoOrdenamiento:
     
     @staticmethod
     def insercion(arr):
-        # === INSERTION SORT IMPLEMENTACIÓN ===
         arr_copy = arr.copy()
         
         for i in range(1, len(arr_copy)):
@@ -95,12 +89,10 @@ class EjecutorAlgoritmo:
         self.progreso_actual = 0
     
     def ejecutar(self):
-        # === EJECUCIÓN EN HILO SEPARADO ===
         self.thread = threading.Thread(target=self._run)
         self.thread.start()
     
     def _run(self):
-        # === MEDICIÓN PRECISA DE TIEMPO DE EJECUCIÓN ===
         inicio = time.perf_counter()
         self.resultado = self.funcion(self.arr)
         fin = time.perf_counter()
@@ -111,10 +103,6 @@ class EjecutorAlgoritmo:
         if self.callback:
             self.callback(self.nombre, self.tiempo)
     
-    def _reportar_progreso(self, progreso):
-        pass
-    
     def esperar(self):
-        # === ESPERA DE FINALIZACIÓN DEL HILO ===
         if self.thread:
             self.thread.join()
